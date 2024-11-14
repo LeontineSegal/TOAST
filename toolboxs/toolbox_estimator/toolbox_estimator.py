@@ -498,6 +498,7 @@ def random_walk(
         walkers_per_step: Optional[List[int]] = walkers_per_step,
         iterations_per_step: Optional[List[int]] = iterations_per_step,
         reference_velocity_resolution: Optional[Real] = 0.05, #0.1
+        show_prog_bar: Optional[bool] = False
 ) -> tuple[np.ndarray, List, List, Real]:
 
     if VERBOSE:
@@ -524,8 +525,13 @@ def random_walk(
 
     # to show the progression bar
     total_iterations = sum(iterations_per_step)
-    if not PARALLELISM : 
-        pbar_rw = tqdm.tqdm(total = total_iterations, position=0, leave=True)
+
+    if not PARALLELISM: 
+        pbar_rw = tqdm.tqdm(total = total_iterations, leave=True, position=0)
+    else : 
+        if show_prog_bar : 
+            pbar_rw = tqdm.tqdm(total = total_iterations, leave=True, position=0)
+
     for iteration in range(iterations):
 
         idx_start, idx_end = iteration * walkers, (iteration + 1) * walkers
@@ -643,8 +649,12 @@ def random_walk(
                 initial_NLL_ = compute_criterion(
                     x_line, s_line, s_b_line, s_c_line)
                 initial_NLL[iteration, :] += initial_NLL_
-        if not PARALLELISM:
+
+        if not PARALLELISM: 
             pbar_rw.update(1)
+        else : 
+            if show_prog_bar :
+                pbar_rw.update(1)
 
     # sort walkers in ascending order
     NLL_sorted, idx_NLL_sorted, count_NLL_sorted = np.unique(
@@ -1072,8 +1082,11 @@ def random_walk(
             # update the NLL
             NLL[idx_decreasing_NLL] = NLL_[idx_decreasing_NLL]
 
-            if not PARALLELISM:
+            if not PARALLELISM: 
                 pbar_rw.update(1)
+            else : 
+                if show_prog_bar :
+                    pbar_rw.update(1)
 
         # sort the NLL and select the best walkers for the next step
         # flattened array of size walkers

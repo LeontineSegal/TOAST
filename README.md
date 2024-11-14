@@ -69,7 +69,7 @@ c
 Clone the source code
 
 ```console
-$ git clone https://git.iram.fr/segal/toast.git
+$ git clone https://github.com/LeontineSegal/TOAST.git
 ```
 
 ## Installing `Python` environment

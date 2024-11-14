@@ -311,6 +311,15 @@ def fit_pixel(
 
         tic_pixel_rw = time.perf_counter()
 
+        # for progression bar 
+        # in which chunk is the pixel ?
+        number_of_LoS = inputs['number_of_LoS']
+        POLL_SIZE = inputs['POLL_SIZE']
+        if pixel_idx in [i for i in range(0, number_of_LoS, (number_of_LoS//POLL_SIZE))] : 
+            show_prog_bar = True
+        else : 
+            show_prog_bar = False
+
         all_res = random_walk(
             FPS,
             dimensions_FPS,
@@ -333,6 +342,7 @@ def fit_pixel(
             colden_res,
             walkers_per_step=walkers_per_step,
             iterations_per_step=iterations_per_step,
+            show_prog_bar=show_prog_bar
         )
 
         toc_pixel_rw = time.perf_counter()
@@ -1200,6 +1210,8 @@ if __name__ == '__main__':
     if PLOT:
         inputs['names_mol_line_latex'] = names_mol_line_latex
 
+    inputs['number_of_LoS'] = number_of_LoS # for progression bar
+
     if PARALLELISM:
 
         if WRITE_RESULTS_TXT_FILE:
@@ -1253,11 +1265,13 @@ if __name__ == '__main__':
                 )
                 for pixel_idx in range(number_of_LoS)]
 
-        with tqdm.tqdm(total=number_of_LoS) as pbar_main:
+        inputs['POLL_SIZE'] = POLL_SIZE # for progression bar
+
+        with tqdm.tqdm(total=number_of_LoS, desc='pixels', leave = True, position = 0) as pbar_main:
 
             with Pool(processes=POLL_SIZE) as pool:
 
-                for res_idx, results_pixel in enumerate(tqdm.tqdm(pool.imap_unordered(fit_pixel_wrapped, zip_args), total=number_of_LoS)):
+                for res_idx, results_pixel in enumerate(pool.imap_unordered(fit_pixel_wrapped, zip_args)):
                     
                     if not SINGLE_PIXEL_ANALYSIS : 
                         pixel = results_pixel['pixel']
@@ -1357,7 +1371,7 @@ if __name__ == '__main__':
 
     else:
 
-        with tqdm.tqdm(total=number_of_LoS, position=0, leave=True) as pbar_main:
+        with tqdm.tqdm(total=number_of_LoS, desc='pixels', leave = True, position = 0) as pbar_main:
             for pixel_idx in range(number_of_LoS):
 
                 pixel = (LoS[pixel_idx][0].item(), LoS[pixel_idx][1].item())

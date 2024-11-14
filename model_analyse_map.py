@@ -14,7 +14,7 @@ warnings.filterwarnings("ignore")
 
 # %% paths
 DATASET = 'horsehead' # name it as you want, according to the different datasets you are studying
-path_base = '/Users/segal/Desktop/these/Python/public-code'
+path_base = '***/TOAST/'
 
 path_inputs = f'{path_base}/examples/data-{DATASET}/inputs'  # all information about the dataset
 path_grids_Tex_tau = f'{path_base}/examples/data-{DATASET}/grids-Tex-tau'
@@ -22,7 +22,7 @@ path_save = f'{path_base}/examples/analyze_map/outputs'
 folder_save = 'estimations'
 
 # %% verbose and plot setting
-VERBOSE = True
+VERBOSE = False
 PLOT =  False
 FORMAT_FILE = '.png'  # for plot, among {'.png', '.pdf'}
 WRITE_RESULTS_TXT_FILE = True
@@ -158,7 +158,7 @@ choose among :
 optimization = 'rw'
 
 # for rw optimization
-walkers_per_step = [100000, 10000, 1000]
+walkers_per_step = [10000, 10000, 1000]
 iterations_per_step = [10, 1000, 5000]
 C_V_res = 0.01  # velocity resolution when estimating the centroid velocity (km/s)
 
