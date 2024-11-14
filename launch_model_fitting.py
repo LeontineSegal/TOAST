@@ -314,9 +314,13 @@ def fit_pixel(
         # for progression bar 
         # in which chunk is the pixel ?
         number_of_LoS = inputs['number_of_LoS']
-        POLL_SIZE = inputs['POLL_SIZE']
-        if pixel_idx in [i for i in range(0, number_of_LoS, (number_of_LoS//POLL_SIZE))] : 
-            show_prog_bar = True
+        
+        if PARALLELISM : 
+            POLL_SIZE = inputs['POLL_SIZE']
+            if pixel_idx in [i for i in range(0, number_of_LoS, (number_of_LoS//POLL_SIZE))] : 
+                show_prog_bar = True
+            else : 
+                show_prog_bar = False
         else : 
             show_prog_bar = False
 
