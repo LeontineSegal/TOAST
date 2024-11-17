@@ -14,10 +14,10 @@ from toolboxs.toolbox_python import from_list_to_array
 # %% paths & settings (TO MODIFY)
 OVERWRITE = True # to save the grids 
 RUN = True # to run the radex execution  
-DATASET = 'horsehead' # name it as you want, according to the different datasets you are studying
+DATASET = 'flame' # name it as you want, according to the different datasets you are studying
 
 # explicit path to avoid conflict when reload the model.py as a module 
-path_base = '***/TOAST/'
+path_base = '***/TOAST'
 path_inputs = f'{path_base}/data-{DATASET}/inputs'  # all information about the dataset
 path_save = f'{path_base}/data-{DATASET}/grids-Tex-tau' 
 
@@ -33,6 +33,7 @@ dataset_names_mol = np.load(f'{path_inputs}/names_mol.npy', allow_pickle=True)
 dataset_names_mol = list(dataset_names_mol)
 dataset_names_line = np.load(f'{path_inputs}/names_line.npy', allow_pickle=True)
 dataset_names_line = list(dataset_names_line)
+
 
 # choose the molecular lines (TO MODIFY)
 
@@ -101,10 +102,12 @@ if sampling_method == 1 :
                 min_FWHM, max_FWHM + step_FWHM, step_FWHM) 
 
         # round 
+        '''
         axis_log10_T_kin = np.round(axis_log10_T_kin, 2)
         axis_log10_nH2 = np.round(axis_log10_nH2, 2)
         axis_log10_N_ref = np.round(axis_log10_N_ref, 2)
         axis_FWHM = np.round(axis_FWHM, 2)
+        '''
 
 elif sampling_method == 2 :
          
@@ -188,9 +191,9 @@ if RUN and OVERWRITE:
                                     clean=False)
                             
                             grid_T_ex[log10_T_kin_idx, log10_nH2_idx,
-                                    log10_N_ref_idx, :, :] = T_ex
+                                    log10_N_ref_idx, :, name_line_idx] = T_ex[:, 0]
                             grid_tau[log10_T_kin_idx, log10_nH2_idx,
-                                    log10_N_ref_idx, :, :] = tau
+                                    log10_N_ref_idx, :, name_line_idx] = tau[:, 0]
 
                             np.save(f'{path_save}/Tex_{name_mol}.npy',
                                     grid_T_ex)
