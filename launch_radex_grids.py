@@ -14,7 +14,7 @@ from toolboxs.toolbox_python import from_list_to_array
 # %% paths & settings (TO MODIFY)
 OVERWRITE = True # to save the grids 
 RUN = True # to run the radex execution  
-DATASET = 'flame' # name it as you want, according to the different datasets you are studying
+DATASET = 'horsehead' # name it as you want, according to the different datasets you are studying
 
 # explicit path to avoid conflict when reload the model.py as a module 
 path_base = '***/TOAST'
