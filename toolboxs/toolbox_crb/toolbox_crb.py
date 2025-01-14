@@ -716,7 +716,20 @@ def compute_fim(
 
     if NLL_g:
         # compute the NLL gradient
+        '''
         NLL_g = (1 / s_b**2) * (np.transpose(s_over_theta) @ np.transpose(s - x))
+        '''
+        b = x - c_0 * s
+        bTs = (b @ np.transpose(s)).item()  # scalar
+        bTs_over_theta = np.transpose(s_over_theta) @ np.transpose(b)
+        sTs_over_theta = np.transpose(s_over_theta) @ np.transpose(s)
+
+        NLL_g_1 = (s_c**2/s_x**2) * sTs
+        NLL_g_2 = ( s_c**2 / (s_b**2 * s_x**2) ) * bTs * bTs_over_theta - ( s_c**4 / (s_b**2 * s_x**4))  * (bTs**2 * sTs_over_theta)
+        NLL_g_3 = - (c_0 / s_b**2) * bTs_over_theta + (c_0 * s_c**2)/(s_b**2 * s_x**2) * (sTs_over_theta * bTs)
+
+        NLL_g = NLL_g_1 - NLL_g_2 + NLL_g_3
+
         return fim, NLL_g
 
     else:

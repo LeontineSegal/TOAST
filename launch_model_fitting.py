@@ -424,6 +424,20 @@ def fit_pixel(
                         optimal_tau_rw[mol_idx][line_idx].append(maps_tau_rw[mol_idx][line_idx][layer][row_idx, column_idx])
         
         tic_pixel_gd = time.perf_counter()
+
+        # for progression bar 
+        # in which chunk is the pixel ?
+        number_of_LoS = inputs['number_of_LoS']
+        
+        if PARALLELISM : 
+            POLL_SIZE = inputs['POLL_SIZE']
+            if pixel_idx in [i for i in range(0, number_of_LoS, (number_of_LoS//POLL_SIZE))] : 
+                show_prog_bar = True
+            else : 
+                show_prog_bar = False
+        else : 
+            show_prog_bar = False
+
         all_res = gradient_descent(
             optimal_theta_rw, 
             optimal_Tex_rw, 
@@ -1265,7 +1279,8 @@ if __name__ == '__main__':
                     LoS[pixel_idx][0].item(),
                     LoS[pixel_idx][1].item(),
                     inputs,
-                    queue_gd,
+                    None,
+                    queue_gd
                 )
                 for pixel_idx in range(number_of_LoS)]
 
